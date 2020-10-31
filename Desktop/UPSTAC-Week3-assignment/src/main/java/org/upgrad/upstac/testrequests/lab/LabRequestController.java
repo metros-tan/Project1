@@ -68,9 +68,14 @@ public class LabRequestController {
         //Implement this method to return the list of test requests assigned to current tester(make use of the above created User object)
         //Make use of the findByTester() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
+
+        //******Note from Tristan - I couldnt find getPendingTests() method.****************
+        //I had to set doctor and tester users statuses to 1 in the database to get them to login
+        //doctor 'consultations requested' page isnt working the error shown in the ui is TypeError: Cannot destructure property 'result' of 'item.labResult' as it is null.
+        //src/consultation/PendingConsultations.js:116
+        //dont know if ive introduced this error or if it was already there.
         User user = userLoggedInService.getLoggedInUser();
         return  testRequestQueryService.findByTester(user); // replace this line with your code
-
 
     }
 
