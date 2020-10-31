@@ -70,10 +70,10 @@ public class LabRequestController {
         //Implement this method to return the list of test requests assigned to current tester(make use of the above created User object)
         //Make use of the findByTester() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
-
+        //**couldnt find getPendingTests method //
+        //** cant get doctor consultation to work in the front end ×
+        //**getting error "TypeError: Right side of assignment cannot be destructured rc/consultation/PendingConsultations.js:116"
         
-
-
     }
 
 
@@ -111,8 +111,8 @@ public class LabRequestController {
         //to update the current test request id with the createLabResult details by the current user(object created)
         try {
             User user = userLoggedInService.getLoggedInUser();
-            TestRequest testrequest = new TestRequest();
-            return testRequestUpdateService.updateLabTest(id, createLabResult, user );
+            TestRequest testrequest = testRequestUpdateService.updateLabTest(id, createLabResult, user );
+            return testrequest;
         }  catch (AppException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
