@@ -105,9 +105,6 @@ public class LabRequestController {
         //to update the current test request id with the createLabResult details by the current user(object created)
         try {
             User user = userLoggedInService.getLoggedInUser();
-            // Create an object of TestResult class (does this exist?)  and make use of updateLabTest() method from testRequestUpdateService class
-            //to update the current test request id with the createLabResult details by the current user(object created)
-           // stRequest updateLabTest(Long id,@Valid CreateLabResult createLabResult, User tester) {
             TestRequest result = testRequestUpdateService.updateLabTest(id, createLabResult, user );
             return result;
         }  catch (AppException e) {
