@@ -4,21 +4,20 @@ package org.upgrad.upstac.testrequests.consultation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.upgrad.upstac.config.security.UserLoggedInService;
 import org.upgrad.upstac.exception.AppException;
+import org.upgrad.upstac.testrequests.RequestStatus;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.testrequests.TestRequestQueryService;
 import org.upgrad.upstac.testrequests.TestRequestUpdateService;
 import org.upgrad.upstac.testrequests.flow.TestRequestFlowService;
 import org.upgrad.upstac.users.User;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
-
-import static org.upgrad.upstac.exception.UpgradResponseStatusException.asBadRequest;
-import static org.upgrad.upstac.exception.UpgradResponseStatusException.asConstraintViolation;
 
 
 @RestController
@@ -49,31 +48,25 @@ public class ConsultationController {
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public List<TestRequest> getForConsultations()  {
         User user = userLoggedInService.getLoggedInUser();
-    }
-        public List<TestRequest> findByUser(User user) {
-            return testRequestQueryService.findBy('LAB_TEST_COMPLETED');
+        return testRequestQueryService.findBy(RequestStatus.LAB_TEST_COMPLETED);
         //Implement this method to get the list of test requests having status as 'LAB_TEST_COMPLETED'
         // make use of the findBy() method from testRequestQueryService class
         //return the result
         // For reference check the method requestHistory() method from TestRequestController class
+
 
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public List<TestRequest> getForDoctor()  {
-        User user = userLoggedInService.getLoggedInUser();
-    }
-    public List<TestRequest> findByDoctor(User user) {
-        return testRequestQueryService.findByDoctor('LAB_TEST_COMPLETED');
 
         // Create an object of User class and store the current logged in user first
         //Implement this method to return the list of test requests assigned to current doctor(make use of the above created User object)
         //Make use of the findByDoctor() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
-
-
-
+        User user = userLoggedInService.getLoggedInUser();
+        return  testRequestQueryService.findByDoctor(user); // replace this line with your code
 
     }
 
@@ -89,10 +82,10 @@ public class ConsultationController {
         // Refer to the method createRequest() from the TestRequestController class
         try {
             User user = userLoggedInService.getLoggedInUser();
-        public List<TestRequest> findByDoctor(User user) {
-            return testRequestUpdateService.assignForConsultation("User.id","User" );
-        }catch (AppException e) {
-            throw asBadRequest(e.getMessage());
+            TestRequest result = testRequestUpdateService.assignForConsultation(id,user);
+            return result;
+        }  catch (AppException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -108,13 +101,12 @@ public class ConsultationController {
 
         try {
             User user = userLoggedInService.getLoggedInUser();
-            public List<TestRequest> findByDoctor(User user) {
-                return testRequestUpdateService.updateConsultation();
-        } catch (ConstraintViolationException e) {
-            throw asConstraintViolation(e);
-        }catch (AppException e) {
-            throw asBadRequest(e.getMessage());
-        }
+            TestRequest result = testRequestUpdateService.updateConsultation(id,testResult,user);
+            return result; 
+        }  catch (AppException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage()); }
     }
+
+
 
 }

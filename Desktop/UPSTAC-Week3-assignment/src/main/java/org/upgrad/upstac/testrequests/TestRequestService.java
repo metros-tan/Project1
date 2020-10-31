@@ -1,5 +1,7 @@
 package org.upgrad.upstac.testrequests;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,8 @@ import org.upgrad.upstac.users.User;
 
 import java.time.LocalDate;
 import java.util.List;
-
+@Getter
+@Setter
 @Service
 public class TestRequestService {
 
@@ -60,7 +63,6 @@ public class TestRequestService {
     }
 
     public List<TestRequest> getHistoryFor(User loggedInUser){
-
 
         return testRequestRepository.findByCreatedBy(loggedInUser);
     }
