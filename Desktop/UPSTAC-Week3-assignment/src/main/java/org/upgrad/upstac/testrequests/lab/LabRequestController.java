@@ -1,6 +1,8 @@
 package org.upgrad.upstac.testrequests.lab;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import java.util.List;
 
 
 @RestController
+@Getter
+@Setter
 @RequestMapping("/api/labrequests")
 public class LabRequestController {
 
@@ -50,9 +54,6 @@ public class LabRequestController {
                 User user = userLoggedInService.getLoggedInUser();
             return testRequestQueryService.findBy(RequestStatus.INITIATED);
 
-            //public List<TestRequest> requestHistory() {
-            //User user = userLoggedInService.getLoggedInUser();
-          //  return testRequestService.getHistoryFor(user);
         //Implement this method to return the list of test requests having status as 'INITIATED'
         //Make use of the findBy() method from testRequestQueryService class to get the list
         // For reference check the method requestHistory() method from TestRequestController class
@@ -63,19 +64,15 @@ public class LabRequestController {
     @GetMapping
     @PreAuthorize("hasAnyRole('TESTER')")
     public List<TestRequest> getForTester()  {
-
+        User user = userLoggedInService.getLoggedInUser();
+        return testRequestQueryService.findByTester(user);
         // Create an object of User class and store the current logged in user first
         //Implement this method to return the list of test requests assigned to current tester(make use of the above created User object)
         //Make use of the findByTester() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
 
-        //******Note from Tristan - I couldnt find getPendingTests() method.****************
-        //I had to set doctor and tester users statuses to 1 in the database to get them to login
-        //doctor 'consultations requested' page isnt working the error shown in the ui is TypeError: Cannot destructure property 'result' of 'item.labResult' as it is null.
-        //src/consultation/PendingConsultations.js:116
-        //dont know if ive introduced this error or if it was already there.
-        User user = userLoggedInService.getLoggedInUser();
-        return  testRequestQueryService.findByTester(user); // replace this line with your code
+        
+
 
     }
 
@@ -89,15 +86,19 @@ public class LabRequestController {
         //Create an object of TestRequest class and use the assignForLabTest() method of testRequestUpdateService to assign the particular id to the current user
         // return the above created object
         // Refer to the method createRequest() from the TestRequestController class
-            try {
+
+
+        try {
                 User user = userLoggedInService.getLoggedInUser();
-                TestRequest result = testRequestUpdateService.assignForLabTest(id,user);
-                return result;
+                TestRequest result = testRequestUpdateService.assignForLabTest(user.getId(), user);
+                return testRequestUpdateService.assignForLabTest(user.getId(), user);
             }  catch (AppException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
 
         }
+
+
 
 
     @PreAuthorize("hasAnyRole('TESTER')")
@@ -110,8 +111,8 @@ public class LabRequestController {
         //to update the current test request id with the createLabResult details by the current user(object created)
         try {
             User user = userLoggedInService.getLoggedInUser();
-            TestRequest result = testRequestUpdateService.updateLabTest(id, createLabResult, user );
-            return result;
+            TestRequest testrequest = new TestRequest();
+            return testRequestUpdateService.updateLabTest(id, createLabResult, user );
         }  catch (AppException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
