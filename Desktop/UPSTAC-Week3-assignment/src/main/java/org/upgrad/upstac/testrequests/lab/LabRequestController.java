@@ -47,51 +47,42 @@ public class LabRequestController {
     private UserLoggedInService userLoggedInService;
 
 
-
+    //Returns list of test requests having a status of 'INITIATED'
+    //Notes stated 'For reference check the method requestHistory() method from TestRequestController class"
+    //but i couldn't find the requestHistory() method
     @GetMapping("/to-be-tested")
     @PreAuthorize("hasAnyRole('TESTER')")
     public List<TestRequest> getForTests()  {
                 User user = userLoggedInService.getLoggedInUser();
             return testRequestQueryService.findBy(RequestStatus.INITIATED);
-
-        //Implement this method to return the list of test requests having status as 'INITIATED'
-        //Make use of the findBy() method from testRequestQueryService class to get the list
-        // For reference check the method requestHistory() method from TestRequestController class
-
-
     }
+
+
+
+    //Returns list of test requests assigned to current tester
+    //Notes stated  "For reference check the method getPendingTests() method from TestRequestController class"
+    //but I couldnt find getPendingTests method
 
     @GetMapping
     @PreAuthorize("hasAnyRole('TESTER')")
     public List<TestRequest> getForTester()  {
         User user = userLoggedInService.getLoggedInUser();
         return testRequestQueryService.findByTester(user);
-        // Create an object of User class and store the current logged in user first
-        //Implement this method to return the list of test requests assigned to current tester(make use of the above created User object)
-        //Make use of the findByTester() method from testRequestQueryService class to get the list
-        // For reference check the method getPendingTests() method from TestRequestController class
-        //**couldnt find getPendingTests method //
-        //** cant get doctor consultation to work in the front end ×
-        //**getting error "TypeError: Right side of assignment cannot be destructured rc/consultation/PendingConsultations.js:116"
-        
+
     }
 
+
+    // Assigns a particular test request to the current tester(logged in user)
+    //I cant get doctor consultation to work in the front end
+    //**getting error "TypeError: Right side of assignment cannot be destructured rc/consultation/PendingConsultations.js:116"
 
     @PreAuthorize("hasAnyRole('TESTER')")
     @PutMapping("/assign/{id}")
     public TestRequest assignForLabTest(@PathVariable Long id) {
-
-        // Implement this method to assign a particular test request to the current tester(logged in user)
-        //Create an object of User class and get the current logged in user
-        //Create an object of TestRequest class and use the assignForLabTest() method of testRequestUpdateService to assign the particular id to the current user
-        // return the above created object
-        // Refer to the method createRequest() from the TestRequestController class
-
-
         try {
                 User user = userLoggedInService.getLoggedInUser();
                 TestRequest result = testRequestUpdateService.assignForLabTest(user.getId(), user);
-                return testRequestUpdateService.assignForLabTest(user.getId(), user);
+                return result;
             }  catch (AppException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
@@ -100,18 +91,16 @@ public class LabRequestController {
 
 
 
-
+    //Updates the result of the current test request with test results
+    //Notes stated "create an object of TestResult class" but i couldnt find a TestResult class
     @PreAuthorize("hasAnyRole('TESTER')")
     @PutMapping("/update/{id}")
     public TestRequest updateLabTest(@PathVariable Long id,@RequestBody CreateLabResult createLabResult) {
 
-        // Implement this method to update the result of the current test request id with test results
-        // Create an object of the User class to get the logged in user
-        // Create an object of TestResult class and make use of updateLabTest() method from testRequestUpdateService class
-        //to update the current test request id with the createLabResult details by the current user(object created)
+
         try {
             User user = userLoggedInService.getLoggedInUser();
-            TestRequest testrequest = testRequestUpdateService.updateLabTest(id, createLabResult, user );
+            TestRequest testrequest = testRequestUpdateService.updateLabTest(user.getId(), createLabResult, user );
             return testrequest;
         }  catch (AppException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
