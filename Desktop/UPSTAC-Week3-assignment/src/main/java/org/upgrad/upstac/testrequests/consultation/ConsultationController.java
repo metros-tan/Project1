@@ -43,43 +43,27 @@ public class ConsultationController {
     private UserLoggedInService userLoggedInService;
 
 
-
+    //Method gets the list of test requests having status of 'LAB_TEST_COMPLETED'
     @GetMapping("/in-queue")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public List<TestRequest> getForConsultations()  {
         User user = userLoggedInService.getLoggedInUser();
         return testRequestQueryService.findBy(RequestStatus.LAB_TEST_COMPLETED);
-        //Implement this method to get the list of test requests having status as 'LAB_TEST_COMPLETED'
-        // make use of the findBy() method from testRequestQueryService class
-        //return the result
-        // For reference check the method requestHistory() method from TestRequestController class
-
-
     }
 
+    // Method returns the list of test requests assigned to current doctor
     @GetMapping
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public List<TestRequest> getForDoctor()  {
-
-        // Create an object of User class and store the current logged in user first
-        //Implement this method to return the list of test requests assigned to current doctor(make use of the above created User object)
-        //Make use of the findByDoctor() method from testRequestQueryService class to get the list
-        // For reference check the method getPendingTests() method from TestRequestController class
         User user = userLoggedInService.getLoggedInUser();
-        return  testRequestQueryService.findByDoctor(user); // replace this line with your code
-
+        return  testRequestQueryService.findByDoctor(user);
     }
 
 
-
+    //Method to assign a particular test request to the current doctor(logged in user)
     @PreAuthorize("hasAnyRole('DOCTOR')")
     @PutMapping("/assign/{id}")
     public TestRequest assignForConsultation(@PathVariable Long id) {
-        // Implement this method to assign a particular test request to the current doctor(logged in user)
-        //Create an object of User class and get the current logged in user
-        //Create an object of TestRequest class and use the assignForConsultation() method of testRequestUpdateService to assign the particular id to the current user
-        // return the above created object
-        // Refer to the method createRequest() from the TestRequestController class
         try {
             User user = userLoggedInService.getLoggedInUser();
             TestRequest result = testRequestUpdateService.assignForConsultation(id,user);
@@ -90,15 +74,10 @@ public class ConsultationController {
     }
 
 
-
+    //Method to update the result of the current test request id with test doctor comments
     @PreAuthorize("hasAnyRole('DOCTOR')")
     @PutMapping("/update/{id}")
     public TestRequest updateConsultation(@PathVariable Long id,@RequestBody CreateConsultationRequest testResult) {
-        // Implement this method to update the result of the current test request id with test doctor comments
-        // Create an object of the User class to get the logged in user
-        // Create an object of TestResult class and make use of updateConsultation() method from testRequestUpdateService class
-        //to update the current test request id with the testResult details by the current user(object created)
-
         try {
             User user = userLoggedInService.getLoggedInUser();
             TestRequest result = testRequestUpdateService.updateConsultation(id,testResult,user);
