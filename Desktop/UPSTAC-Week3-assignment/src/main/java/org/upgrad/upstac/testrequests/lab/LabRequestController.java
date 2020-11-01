@@ -81,7 +81,7 @@ public class LabRequestController {
     public TestRequest assignForLabTest(@PathVariable Long id) {
         try {
                 User user = userLoggedInService.getLoggedInUser();
-                TestRequest result = testRequestUpdateService.assignForLabTest(user.getId(), user);
+                TestRequest result = testRequestUpdateService.assignForLabTest(id, user);
                 return result;
             }  catch (AppException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -100,7 +100,7 @@ public class LabRequestController {
 
         try {
             User user = userLoggedInService.getLoggedInUser();
-            TestRequest testrequest = testRequestUpdateService.updateLabTest(user.getId(), createLabResult, user );
+            TestRequest testrequest = testRequestUpdateService.updateLabTest(id, createLabResult, user );
             return testrequest;
         }  catch (AppException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
