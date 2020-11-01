@@ -27,11 +27,8 @@ public class LabResultService {
     private static Logger logger = LoggerFactory.getLogger(LabResultService.class);
 
 
-
+    //The lab result module service - getters and setters to update lab results
     private LabResult createLabResult(User tester, TestRequest testRequest) {
-        //Implement this method to create the lab result module service
-        // create object of LabResult class and use the setter methods to set tester and testRequest details
-        // make use of saveLabResult() method to return the LabResult object
         LabResult labResult = new LabResult();
         labResult.setTester(testRequest.getCreatedBy());
         labResult.setUpdatedOn(LocalDate.now());
@@ -45,7 +42,7 @@ public class LabResultService {
         testRequest.setPinCode(testRequest.getPinCode());
         testRequest.setConsultation(testRequest.getConsultation());
         testRequest.setLabResult(testRequest.getLabResult());
-        return saveLabResult(labResult); // replace this line with your code
+        return saveLabResult(labResult);
     }
 
     private TestRequest request;
@@ -69,11 +66,7 @@ public class LabResultService {
 
     public LabResult updateLabTest(TestRequest testRequest, CreateLabResult createLabResult) {
 
-        //Implement this method to update the lab test
-        // create an object of LabResult and make use of setters to set Blood Pressure, Comments,
-        // HeartBeat, OxygenLevel, Temperature, Result and UpdatedOn values
-        // make use of the saveLabResult() method to return the object of LabResult
-
+        //Method to update the lab test
         LabResult labResult = new LabResult();
         labResult.setBloodPressure(createLabResult.getBloodPressure());
         labResult.setComments(createLabResult.getComments());
@@ -82,7 +75,7 @@ public class LabResultService {
         labResult.setTemperature(createLabResult.getTemperature());
         labResult.setResult(createLabResult.getResult());
         labResult.setUpdatedOn(LocalDate.now());
-        return saveLabResult(labResult); // replace this line with your code
+        return saveLabResult(labResult);
 
 
     }
